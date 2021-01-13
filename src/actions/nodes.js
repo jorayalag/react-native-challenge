@@ -30,6 +30,7 @@ export function checkNodeStatus(node) {
 
       if (res.status >= 400) {
         dispatch(checkNodeStatusFailure(node));
+        return;
       }
 
       const json = await res.json();
@@ -46,5 +47,38 @@ export function checkNodeStatuses(list) {
     list.forEach(node => {
       dispatch(checkNodeStatus(node));
     });
+  };
+}
+
+export function getBlockListStart(node) {
+  return { type: types.GET_BLOCK_LIST_START, node };
+}
+
+export function getBlockListSuccess(node, blocks) {
+  return { type: types.GET_BLOCK_LIST_SUCCESS, node, blocks };
+}
+
+export function getBlockListFailure(node) {
+  return { type: types.GET_BLOCK_LIST_FAILURE, node };
+}
+
+export function getBlockList(node) {
+  return async dispatch => {
+    try {
+      dispatch(getBlockListStart(node));
+
+      const res = await fetch(`${node.url}/api/v1/blocks`);
+
+      if (res.status >= 400) {
+        dispatch(getBlockListFailure(node));
+        return;
+      }
+
+      const json = await res.json();
+
+      dispatch(getBlockListSuccess(node, json));
+    } catch (e) {
+      dispatch(getBlockListFailure(node));
+    }
   };
 }

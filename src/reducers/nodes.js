@@ -2,8 +2,19 @@ import {
   CHECK_NODE_STATUS_START,
   CHECK_NODE_STATUS_SUCCESS,
   CHECK_NODE_STATUS_FAILURE,
-} from '../constants/actionTypes';
-import initialState from './initialState';
+  GET_BLOCK_LIST_START,
+  GET_BLOCK_LIST_SUCCESS,
+  GET_BLOCK_LIST_FAILURE
+} from "../constants/actionTypes";
+import initialState from "./initialState";
+
+function findNode(state, nodeUrl) {
+  return state.list.findIndex(p => p.url === nodeUrl);
+}
+
+function updateList(list, index, newElement) {
+  return [...list.slice(0, index), newElement, ...list.slice(index + 1)];
+}
 
 export default function nodesReducer(state = initialState().nodes, action) {
   let list, nodeIndex;
@@ -16,14 +27,14 @@ export default function nodesReducer(state = initialState().nodes, action) {
           ...state.list.slice(0, nodeIndex),
           {
             ...state.list[nodeIndex],
-            loading: true,
+            loading: true
           },
-          ...state.list.slice(nodeIndex + 1),
+          ...state.list.slice(nodeIndex + 1)
         ];
       }
       return {
         ...state,
-        list,
+        list
       };
     case CHECK_NODE_STATUS_SUCCESS:
       list = state.list;
@@ -35,14 +46,14 @@ export default function nodesReducer(state = initialState().nodes, action) {
             ...state.list[nodeIndex],
             online: true,
             name: action.res.node_name,
-            loading: false,
+            loading: false
           },
-          ...state.list.slice(nodeIndex + 1),
+          ...state.list.slice(nodeIndex + 1)
         ];
       }
       return {
         ...state,
-        list,
+        list
       };
     case CHECK_NODE_STATUS_FAILURE:
       list = state.list;
@@ -53,14 +64,75 @@ export default function nodesReducer(state = initialState().nodes, action) {
           {
             ...state.list[nodeIndex],
             online: false,
-            loading: false,
+            loading: false
           },
-          ...state.list.slice(nodeIndex + 1),
+          ...state.list.slice(nodeIndex + 1)
         ];
       }
       return {
         ...state,
-        list,
+        list
+      };
+
+    case GET_BLOCK_LIST_START:
+      list = state.list;
+      nodeIndex = findNode(state, action.node.url);
+      if (nodeIndex >= 0) {
+        const node = list[nodeIndex];
+        const nodeWithBlocks = {
+          ...node,
+          blocks: {
+            list: [],
+            loading: true,
+            error: false
+          }
+        };
+        list = updateList(list, nodeIndex, nodeWithBlocks);
+      }
+
+      return {
+        ...state,
+        list
+      };
+    case GET_BLOCK_LIST_SUCCESS:
+      list = state.list;
+      nodeIndex = findNode(state, action.node.url);
+      if (nodeIndex >= 0) {
+        const node = list[nodeIndex];
+        const nodeWithBlocks = {
+          ...node,
+          blocks: {
+            list: action.blocks,
+            loading: false,
+            error: false
+          }
+        };
+        list = updateList(list, nodeIndex, nodeWithBlocks);
+      }
+
+      return {
+        ...state,
+        list
+      };
+    case GET_BLOCK_LIST_FAILURE:
+      list = state.list;
+      nodeIndex = findNode(state, action.node.url);
+      if (nodeIndex >= 0) {
+        const node = list[nodeIndex];
+        const nodeWithBlocks = {
+          ...node,
+          blocks: {
+            list: [],
+            loading: false,
+            error: true
+          }
+        };
+        list = updateList(list, nodeIndex, nodeWithBlocks);
+      }
+
+      return {
+        ...state,
+        list
       };
     default:
       return state;

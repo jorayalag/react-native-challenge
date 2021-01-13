@@ -2,29 +2,49 @@ export default () => ({
   nodes: {
     list: [
       {
-        url: 'https://thawing-springs-53971.herokuapp.com',
+        url: "https://thawing-springs-53971.herokuapp.com",
         online: false,
-        name: 'Node 1',
+        name: "Node 1",
         loading: false,
+        blocks: {
+          loading: false,
+          list: [],
+          error: false
+        }
       },
       {
-        url: 'https://secret-lowlands-62331.herokuapp.com',
+        url: "https://secret-lowlands-62331.herokuapp.com",
         online: false,
-        name: 'Node 2',
+        name: "Node 2",
         loading: false,
+        blocks: {
+          loading: false,
+          list: [],
+          error: false
+        }
       },
       {
-        url: 'https://calm-anchorage-82141.herokuapp.com',
+        url: "https://calm-anchorage-82141.herokuapp.com",
         online: false,
-        name: 'Node 3',
+        name: "Node 3",
         loading: false,
+        blocks: {
+          loading: false,
+          list: [],
+          error: false
+        }
       },
       {
-        url: 'http://localhost:3002',
+        url: "http://localhost:3002",
         online: false,
-        name: 'Node 4',
+        name: "Node 4",
         loading: false,
-      },
-    ],
-  },
+        blocks: {
+          loading: false,
+          list: [],
+          error: false
+        }
+      }
+    ]
+  }
 });
