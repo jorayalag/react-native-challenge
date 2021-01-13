@@ -4,8 +4,8 @@
 
 1. `git clone repo`
 2. `cd react-native-challenge`
-3. `npm i`
-4. `cd ios && pod install && cd ..`
+3. `npm i` or `yarn install`
+4. `npx pod-install`
 5. `npx react-native run-ios` or `npx react-native run-android`
 
 ## Screenshots
