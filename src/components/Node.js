@@ -1,6 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  ActivityIndicator
+} from "react-native";
 import colors from "../constants/colors";
 import { Paper, Subtitle, BodyText, Caption } from "material-bread";
 import { Expander } from "./Expander";
@@ -60,9 +66,18 @@ const Node = ({ node, expanded, toggleNodeExpanded }) => (
       <Expander expanded={expanded} style={styles.icon(expanded)} />
       {expanded && (
         <View style={styles.heading}>
-          {node.blocks.list.map(block => (
-            <Block block={{ id: block.id, text: block.attributes.data }} />
-          ))}
+          {node.blocks.loading && <ActivityIndicator />}
+          {!node.blocks.loading &&
+            node.blocks.list.length > 0 &&
+            node.blocks.list.map(block => (
+              <Block
+                block={{ id: block.id, text: block.attributes.data }}
+                key={block.id}
+              />
+            ))}
+          {!node.blocks.loading && node.blocks.list.length == 0 && (
+            <BodyText type={1} text="No Blocks found" />
+          )}
         </View>
       )}
     </Paper>
