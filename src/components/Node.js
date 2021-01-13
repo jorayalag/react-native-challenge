@@ -5,6 +5,7 @@ import colors from "../constants/colors";
 import { Paper, Subtitle, BodyText, Caption } from "material-bread";
 import { Expander } from "./Expander";
 import Status from "./Status";
+import { useEffect } from "react";
 
 const Node = ({ node, expanded, toggleNodeExpanded }) => (
   <TouchableOpacity onPress={() => toggleNodeExpanded(node)}>
@@ -25,7 +26,7 @@ const Node = ({ node, expanded, toggleNodeExpanded }) => (
       <Expander expanded={expanded} style={styles.icon(expanded)} />
       {expanded && (
         <View style={styles.heading}>
-          <BodyText type={1} text={"Blocks go here"} />
+          <BodyText type={1} text={JSON.stringify(node.blocks)} />
         </View>
       )}
     </Paper>
