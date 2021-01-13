@@ -10,7 +10,11 @@ const composeEnhancers = __DEV__
   : compose;
 
 export default initialState => {
-  const middlewares = [reduxImmutableStateInvariant(), thunk, logger];
+  let middlewares = [reduxImmutableStateInvariant(), thunk];
+  if (__DEV__) {
+    middlewares.push(logger);
+  }
+
   const store = createStore(
     rootReducer,
     initialState,

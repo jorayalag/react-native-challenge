@@ -43,7 +43,7 @@ const Block = ({ block }) => {
 Block.propTypes = {
   block: PropTypes.shape({
     id: PropTypes.string,
-    text: PropTypes.bool
+    text: PropTypes.string,
   }).isRequired
 };
 

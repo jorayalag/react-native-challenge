@@ -1,96 +1,175 @@
-import * as ActionTypes from '../constants/actionTypes';
-import reducer from './nodes';
-import initialState from './initialState';
+import * as ActionTypes from "../constants/actionTypes";
+import reducer from "./nodes";
+import initialState from "./initialState";
 
-describe('Reducers::Nodes', () => {
+describe("Reducers::Nodes", () => {
   const getInitialState = () => {
     return initialState().nodes;
   };
 
   const nodeA = {
-    url: 'http://localhost:3002',
+    url: "http://localhost:3002",
     online: false,
     name: null,
+    blocks: {
+      list: [],
+      loading: false,
+      error: false
+    }
   };
 
   const nodeB = {
-    url: 'http://localhost:3003',
+    url: "http://localhost:3003",
     online: false,
     name: null,
+    blocks: {
+      list: [],
+      loading: false,
+      error: false
+    }
   };
 
-  it('should set initial state by default', () => {
-    const action = {type: 'unknown'};
+  const blocks = [
+    { id: 1, attributes: { id: 1, data: "hello" } },
+    { id: 2, attributes: { id: 2, data: "there" } }
+  ];
+
+  it("should set initial state by default", () => {
+    const action = { type: "unknown" };
     const expected = getInitialState();
 
     expect(reducer(undefined, action)).toEqual(expected);
   });
 
-  it('should handle CHECK_NODE_STATUS_START', () => {
+  it("should handle CHECK_NODE_STATUS_START", () => {
     const appState = {
-      list: [nodeA, nodeB],
+      list: [nodeA, nodeB]
     };
-    const action = {type: ActionTypes.CHECK_NODE_STATUS_START, node: nodeA};
+    const action = { type: ActionTypes.CHECK_NODE_STATUS_START, node: nodeA };
     const expected = {
       list: [
         {
           ...nodeA,
-          loading: true,
+          loading: true
         },
-        nodeB,
-      ],
+        nodeB
+      ]
     };
 
     expect(reducer(appState, action)).toEqual(expected);
   });
 
-  it('should handle CHECK_NODE_STATUS_SUCCESS', () => {
+  it("should handle CHECK_NODE_STATUS_SUCCESS", () => {
     const appState = {
-      list: [nodeA, nodeB],
+      list: [nodeA, nodeB]
     };
     const action = {
       type: ActionTypes.CHECK_NODE_STATUS_SUCCESS,
       node: nodeA,
-      res: {node_name: 'alpha'},
+      res: { node_name: "alpha" }
     };
     const expected = {
       list: [
         {
           ...nodeA,
           online: true,
-          name: 'alpha',
-          loading: false,
+          name: "alpha",
+          loading: false
         },
-        nodeB,
-      ],
+        nodeB
+      ]
     };
 
     expect(reducer(appState, action)).toEqual(expected);
   });
 
-  it('should handle CHECK_NODE_STATUS_FAILURE', () => {
+  it("should handle CHECK_NODE_STATUS_FAILURE", () => {
     const appState = {
       list: [
         {
           ...nodeA,
           online: true,
-          name: 'alpha',
-          loading: false,
+          name: "alpha",
+          loading: false
         },
-        nodeB,
-      ],
+        nodeB
+      ]
     };
-    const action = {type: ActionTypes.CHECK_NODE_STATUS_FAILURE, node: nodeA};
+    const action = { type: ActionTypes.CHECK_NODE_STATUS_FAILURE, node: nodeA };
     const expected = {
       list: [
         {
           ...nodeA,
           online: false,
-          name: 'alpha',
-          loading: false,
+          name: "alpha",
+          loading: false
         },
-        nodeB,
-      ],
+        nodeB
+      ]
+    };
+
+    expect(reducer(appState, action)).toEqual(expected);
+  });
+
+  it("should handle GET_BLOCK_LIST_START", () => {
+    const appState = {
+      list: [nodeA, nodeB]
+    };
+    const action = {
+      type: ActionTypes.GET_BLOCK_LIST_START,
+      node: nodeA
+    };
+    const expected = {
+      list: [
+        {
+          ...nodeA,
+          blocks: { ...nodeA.blocks, loading: true }
+        },
+        nodeB
+      ]
+    };
+
+    expect(reducer(appState, action)).toEqual(expected);
+  });
+
+  it("should handle GET_BLOCK_LIST_SUCCESS", () => {
+    const appState = {
+      list: [nodeA, nodeB]
+    };
+    const action = {
+      type: ActionTypes.GET_BLOCK_LIST_SUCCESS,
+      node: nodeA,
+      blocks: blocks
+    };
+    const expected = {
+      list: [
+        {
+          ...nodeA,
+          blocks: { ...nodeA.blocks, list: blocks }
+        },
+        nodeB
+      ]
+    };
+
+    expect(reducer(appState, action)).toEqual(expected);
+  });
+
+  it("should handle GET_BLOCK_LIST_FAILURE", () => {
+    const appState = {
+      list: [nodeA, nodeB]
+    };
+    const action = {
+      type: ActionTypes.GET_BLOCK_LIST_FAILURE,
+      node: nodeA
+    };
+    const expected = {
+      list: [
+        {
+          ...nodeA,
+          blocks: { ...nodeA.blocks, error: true }
+        },
+        nodeB
+      ]
     };
 
     expect(reducer(appState, action)).toEqual(expected);
