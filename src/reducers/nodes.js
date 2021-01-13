@@ -6,15 +6,8 @@ import {
   GET_BLOCK_LIST_SUCCESS,
   GET_BLOCK_LIST_FAILURE
 } from "../constants/actionTypes";
+import { findNode, updateList } from "../utils";
 import initialState from "./initialState";
-
-function findNode(state, nodeUrl) {
-  return state.list.findIndex(p => p.url === nodeUrl);
-}
-
-function updateList(list, index, newElement) {
-  return [...list.slice(0, index), newElement, ...list.slice(index + 1)];
-}
 
 export default function nodesReducer(state = initialState().nodes, action) {
   let list, nodeIndex;

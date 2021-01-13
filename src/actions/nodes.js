@@ -1,4 +1,5 @@
 import * as types from "../constants/actionTypes";
+import { findNode } from "../utils";
 
 const checkNodeStatusStart = node => {
   return {
@@ -67,6 +68,12 @@ export function getBlockList(node) {
     try {
       dispatch(getBlockListStart(node));
 
+      if (node.blocks.list.length > 0) {
+        console.log(`${node.url} blocks cached`);
+        dispatch(getBlockListSuccess(node, node.blocks.list));
+        return;
+      }
+
       const res = await fetch(`${node.url}/api/v1/blocks`);
 
       if (res.status >= 400) {
@@ -76,7 +83,7 @@ export function getBlockList(node) {
 
       const json = await res.json();
 
-      dispatch(getBlockListSuccess(node, json));
+      dispatch(getBlockListSuccess(node, json.data));
     } catch (e) {
       dispatch(getBlockListFailure(node));
     }
