@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../actions/nodes";
@@ -35,19 +35,24 @@ export class Nodes extends React.Component {
   render() {
     const { nodes } = this.props;
     return (
-      <View>
-        <Heading style={styles.heading} type={4}>
-          Nodes
-        </Heading>
-        {nodes.list.map(node => (
-          <Node
-            node={node}
-            key={node.url}
-            expanded={node.url === this.state.expandedNodeURL}
-            toggleNodeExpanded={this.toggleNodeExpanded}
-          />
-        ))}
-      </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView>
+          <View>
+            <Heading style={styles.heading} type={4}>
+              Nodes
+            </Heading>
+
+            {nodes.list.map(node => (
+              <Node
+                node={node}
+                key={node.url}
+                expanded={node.url === this.state.expandedNodeURL}
+                toggleNodeExpanded={this.toggleNodeExpanded}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
