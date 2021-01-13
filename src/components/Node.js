@@ -1,11 +1,45 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import colors from "../constants/colors";
 import { Paper, Subtitle, BodyText, Caption } from "material-bread";
 import { Expander } from "./Expander";
 import Status from "./Status";
-import { useEffect } from "react";
+
+const Block = ({ block }) => {
+  return (
+    <View
+      style={{
+        backgroundColor: "rgba(0,0,0,0.12)",
+        paddingHorizontal: 6,
+        paddingVertical: 8,
+        marginTop: 4,
+        borderRadius: 2
+      }}
+    >
+      <View style={{}}>
+        <Text
+          style={{
+            color: "#304FFE",
+            fontWeight: "bold",
+            fontSize: 12,
+            marginBottom: 10
+          }}
+        >
+          {block.id.padStart(3, "0")}
+        </Text>
+        <Text style={{ color: "#263238", fontSize: 16 }}>{block.text}</Text>
+      </View>
+    </View>
+  );
+};
+
+Block.propTypes = {
+  block: PropTypes.shape({
+    id: PropTypes.string,
+    text: PropTypes.bool
+  }).isRequired
+};
 
 const Node = ({ node, expanded, toggleNodeExpanded }) => (
   <TouchableOpacity onPress={() => toggleNodeExpanded(node)}>
@@ -26,7 +60,9 @@ const Node = ({ node, expanded, toggleNodeExpanded }) => (
       <Expander expanded={expanded} style={styles.icon(expanded)} />
       {expanded && (
         <View style={styles.heading}>
-          <BodyText type={1} text={JSON.stringify(node.blocks)} />
+          {node.blocks.list.map(block => (
+            <Block block={{ id: block.id, text: block.attributes.data }} />
+          ))}
         </View>
       )}
     </Paper>
